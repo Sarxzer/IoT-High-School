@@ -24,7 +24,7 @@ while True:
     oled.fill(0)
     oled.text("Temp:" + str(temperature) + "C", 0, 0)
     oled.show()
-    time.sleep(3)
+    time.sleep(.2)
 
 # Test loop
 # for val in test_values:
