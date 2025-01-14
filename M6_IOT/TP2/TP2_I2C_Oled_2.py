@@ -18,7 +18,7 @@ while True:
         oled.show()
         time.sleep(0.5)
         # texte déflant
-    texte_complet = "Ce texte est beaucoup trop long pour cet ecran OLED"
+    texte_complet = "Ce texte est beaucoup trop long pour cet écran OLED"
     longueur = len(texte_complet)
     for n in range(0,longueur - 1):
         oled.fill(0)
