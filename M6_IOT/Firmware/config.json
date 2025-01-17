@@ -1,0 +1,15 @@
+{
+    "Wifi": {
+        "ssid": "AP-IOT-BPCIEL",
+        "key": "wificielCIEL2024$"
+    },
+    "i2c": {
+        "sda": 20,
+        "scl": 21
+    },
+    "Oled":
+    {
+        "Width": 128,
+        "Height": 64
+    }
+}
