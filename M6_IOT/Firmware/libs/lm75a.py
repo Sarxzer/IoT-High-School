@@ -9,7 +9,7 @@ class lm75a:
     """
     Class to read temperature from LM75 sensor
     """
-    def __init__(self, scl, sda, addr=0x48):
+    def __init__(self, sda, scl, addr=0x48):
         self.i2c = SoftI2C(scl=scl, sda=sda, freq=100000, timeout=5000)
         self.addr = addr
 

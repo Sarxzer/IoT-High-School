@@ -77,7 +77,6 @@ if connect():
     while True:
 
 
-        oled.text(
 
 
         print("Attente d'une connexion client")
