@@ -17,10 +17,14 @@ class lm75a:
         """
         Read temperature from LM75 sensor
         """
-        buf = bytearray(1)
-        buf[0] = 0x00
-        self.i2c.writeto(self.addr, buf)
-        mesure = self.i2c.readfrom(self.addr, 2)
-        val = (mesure[0] << 3)|(mesure[1] >> 5)
-        temperature = val * 0.125
-        return temperature
+        try:
+            buf = bytearray(1)
+            buf[0] = 0x00
+            self.i2c.writeto(self.addr, buf)
+            mesure = self.i2c.readfrom(self.addr, 2)
+            val = (mesure[0] << 3)|(mesure[1] >> 5)
+            temperature = val * 0.125
+            return temperature
+        except Exception as e:
+            print('Error reading LM75 sensor:', e)
+            return "Error"

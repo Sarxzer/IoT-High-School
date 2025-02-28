@@ -16,12 +16,19 @@ from libs.oled import Oled
 with open('config.json') as f:
     config = ujson.load(f)
 
-# Connect to WiFi
-wifi = Wifi(config['Wifi']['ssid'], config['Wifi']['key'])
-wifi.connect()
-
 # Initialize OLED display
 oled = Oled(config['i2c']['scl'], config['i2c']['sda'], config['Oled']['Width'], config['Oled']['Height'])
+
+# Connect to WiFi
+oled.text("Connecting to ", 0, 0)
+oled.text("Wifi :", 0, 10)
+oled.text(config['Wifi']['ssid'], 0, 20)
+oled.show()
+wifi = Wifi(config['Wifi']['ssid'], config['Wifi']['key'])
+wifi.connect()
+oled.text("Connected to ", 0, 0)
+oled.text("Wifi !", 0, 10)
+oled.show()
 
 # Initialize LM75a sensor
 lm75a = lm75a(20, 21)
@@ -42,19 +49,16 @@ led_green_pwm.freq(1000)
 led_blue_pwm = PWM(led_blue)
 led_blue_pwm.freq(1000)
 
-# Turn off LEDs
-def led_off():
-    led_red.off()
-    led_green.off()
-    led_blue.off()
+# Button (Pin 19)
+button = Pin(19, Pin.IN)
 
 # RGB LED control (0-255)
-def led_on(red, green, blue):
+def led_color(red, green, blue):
     led_red_pwm.duty_u16((65535*red)//255)
     led_green_pwm.duty_u16((65535*green)//255)
     led_blue_pwm.duty_u16((65535*blue)//255)
 
-
+led_color(0, 0, 0)
 
 # Initialize Web Page
 def web_page(temperature):
@@ -92,16 +96,19 @@ def web_page(temperature):
     </html>"""
     return html
 
-def refreshOled():
+def refreshOled(pin):
+    print("Button pressed")
     # Display temperature on OLED
     oled.fill(0)
     temperature = lm75a.read()
     oled.text("Temperature:", 0, 0)
     oled.text(str(temperature), 0, 10)
     oled.show()
+    time.sleep(5)
+    oled.fill(0)
+    oled.show()
 
-oledRefresher = Timer(-1)
-oledRefresher.init(period=10000, mode=Timer.PERIODIC, callback=lambda t: refreshOled())
+button.irq(trigger=Pin.IRQ_FALLING, handler=refreshOled)
 
 while True:
     temperature = lm75a.read()
@@ -122,10 +129,10 @@ while True:
     # Get the LED state
     if requete.find('/?led=on') == 6:
         print("LED ON")
-        led_on(255, 255, 255)
+        led_color(255, 255, 255)
     elif requete.find('/?led=off') == 6:
         print("LED OFF")
-        led_off()
+        led_color(0, 0, 0)
     
     # Get the RGB LED state
     if requete.find('/?red=') == 6:
@@ -133,7 +140,7 @@ while True:
         green = int(requete[requete.find('&green=')+7:requete.find('&blue=')])
         blue = int(requete[requete.find('&blue=')+6:requete.find('HTTP')-1])
         print("RGB LED: red=", red, " green=", green, " blue=", blue)
-        led_on(red, green, blue)
+        led_color(red, green, blue)
 
     print("Envoi reponse du serveur : code HTML a afficher")
     connexionClient.send('HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n')
