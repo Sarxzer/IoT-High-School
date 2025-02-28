@@ -1,5 +1,5 @@
 from machine import Pin, PWM
-import time
+import utime as time
 
 ledR = Pin(2, Pin.OUT)
 ledG = Pin(3, Pin.OUT)
@@ -15,6 +15,7 @@ compteur = 0
 sec = 0
 
 def detectbutton(pin):
+    time.sleep_ms(100) # anti-rebond
     global interupt
     interupt += 1
     if interupt == 0:
@@ -38,4 +39,4 @@ buttonPin.irq(trigger=Pin.IRQ_FALLING, handler=detectbutton)
 while True:
     compteur += 1
     print(compteur)
-    time.sleep(4)
+    time.sleep_ms(4000)
