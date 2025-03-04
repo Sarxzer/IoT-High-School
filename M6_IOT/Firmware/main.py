@@ -2,9 +2,7 @@
 # It while display the temperature from the LM75a sensor on the OLED display. And host a web page to see the temeperature and turn on and off the LEDs.
 
 from machine import Pin, I2C, Timer, PWM
-import ssd1306
 import time
-import network
 import ujson
 
 from libs.wifi import Wifi
