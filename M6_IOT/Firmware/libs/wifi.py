@@ -3,7 +3,6 @@ This module is used to connect the Raspberry Pi Pico to a WiFi network.
 """
 
 import network
-import socket
 import time
 
 

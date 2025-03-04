@@ -1,5 +1,4 @@
 from machine import SoftI2C, Pin
-import time
 import ssd1306
 
 class Oled:
